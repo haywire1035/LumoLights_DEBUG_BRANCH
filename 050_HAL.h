@@ -220,11 +220,11 @@ inline const char* GetHardwareConfigLabel() {
 #endif
 
 #ifndef HAL_DUAL_WS2801_COUNT_ONE
-#define HAL_DUAL_WS2801_COUNT_ONE 31
+#define HAL_DUAL_WS2801_COUNT_ONE 10
 #endif
 
 #ifndef HAL_DUAL_WS2801_COUNT_TWO
-#define HAL_DUAL_WS2801_COUNT_TWO 31
+#define HAL_DUAL_WS2801_COUNT_TWO 10
 #endif
 
 #ifndef HAL_DUAL_WS2801_BUTTON_PIN

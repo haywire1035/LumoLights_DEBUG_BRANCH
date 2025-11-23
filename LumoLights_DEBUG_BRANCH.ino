@@ -114,9 +114,9 @@ void setup() {
 
 void loop() {
 
-  //homeSpan.poll();
+  homeSpan.poll();
 
-  LED::Update();
+  if (millis() < 20000) LED::Update();
 
   //MAIN::UpdateDeviceBridge();
 
