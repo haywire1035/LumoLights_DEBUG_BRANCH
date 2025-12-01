@@ -164,10 +164,10 @@ inline void LED::UpdateColor() {
 
   for (size_t i = 0; i < count; ++i) {
     const auto& p = v.Pixels[i];
-    HAL::SetPixelColor(static_cast<uint16_t>(i), p.R, p.G, p.B, p.W);
+    //HAL::SetPixelColor(static_cast<uint16_t>(i), p.R, p.G, p.B, p.W);
   }
 
-  HAL::ShowLedHardware();
+  //HAL::ShowLedHardware();
 }
 
 
