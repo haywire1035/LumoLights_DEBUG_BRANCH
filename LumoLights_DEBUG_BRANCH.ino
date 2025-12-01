@@ -12,7 +12,7 @@
 //         MAIN SKETCH          //
 //////////////////////////////////
 
-#define ENABLE_COMMAND_LINE_INTERFACE true
+#define ENABLE_COMMAND_LINE_INTERFACE false
 #define DEBUG_SERIAL true
 
 // defines for device identification

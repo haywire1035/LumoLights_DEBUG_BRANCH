@@ -76,13 +76,15 @@ struct DEV_Color1_Light : Service::LightBulb {
 
   WS2801_LED::Color* colors;
 
-DEV_Color1_Light(uint8_t dataPin, uint8_t clockPin, int nPixels) : Service::LightBulb(){
+DEV_Color1_Light(uint8_t dataPin, uint8_t clockPin, int count)
+  : Service::LightBulb(), nPixels(count) {
 
     V.setRange(5,100,1);                      // sets the range of the Brightness to be from a min of 5%, to a max of 100%, in steps of 1%
     pixel=new WS2801_LED(dataPin,clockPin);          // creates Dot LED on specified pins
     colors = new WS2801_LED::Color[nPixels];
 
     //this->nPixels=nPixels;                    // save number of Pixels in this LED Strand
+    
     update();                                 // manually call update() to set pixel with restored initial values
     update();                                 // call second update() a second time - DotStar seems to need to be "refreshed" upon start-up
   }

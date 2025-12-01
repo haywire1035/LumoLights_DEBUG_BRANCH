@@ -103,7 +103,7 @@ inline void InitializeConsoleInterface() {
  */
 inline void Process() {
   if (!ENABLE_COMMAND_LINE_INTERFACE) {
-    ProcessPendingRestart();
+    //ProcessPendingRestart();
     return;
   }
 
