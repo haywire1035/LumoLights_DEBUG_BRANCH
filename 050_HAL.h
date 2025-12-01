@@ -13,13 +13,13 @@
 // Select default configuration if nothing else is specified.
 #if !defined(HAL_CONFIG_SINGLE_WS2812) && !defined(HAL_CONFIG_DUAL_WS2812) && \
     !defined(HAL_CONFIG_SINGLE_WS2801) && !defined(HAL_CONFIG_DUAL_WS2801)
-#define HAL_CONFIG_DUAL_WS2801
+#define HAL_CONFIG_SINGLE_WS2801
 #endif
 
 #if defined(HAL_CONFIG_SINGLE_WS2812) || defined(HAL_CONFIG_DUAL_WS2812)
 #include <Adafruit_NeoPixel.h>
 #elif defined(HAL_CONFIG_SINGLE_WS2801) || defined(HAL_CONFIG_DUAL_WS2801)
-#include "Adafruit_WS2801.h"
+
 #endif
 
 namespace HAL {
@@ -153,52 +153,42 @@ inline const char* GetHardwareConfigLabel() {
 #elif defined(HAL_CONFIG_SINGLE_WS2801)
 
 #ifndef HAL_SINGLE_WS2801_DATA_PIN
-#define HAL_SINGLE_WS2801_DATA_PIN 2
+#define HAL_SINGLE_WS2801_DATA_PIN 15
 #endif
 
 #ifndef HAL_SINGLE_WS2801_CLOCK_PIN
-#define HAL_SINGLE_WS2801_CLOCK_PIN 3
+#define HAL_SINGLE_WS2801_CLOCK_PIN 14
 #endif
 
 #ifndef HAL_SINGLE_WS2801_LED_COUNT
-#define HAL_SINGLE_WS2801_LED_COUNT 69
+#define HAL_SINGLE_WS2801_LED_COUNT 31
 #endif
 
 inline constexpr uint16_t kLedCount = HAL_SINGLE_WS2801_LED_COUNT;
 
-inline Adafruit_WS2801 g_strip(kLedCount, HAL_SINGLE_WS2801_DATA_PIN,
-                               HAL_SINGLE_WS2801_CLOCK_PIN);
-
 inline bool InitLedHardware() {
-  g_strip.begin();
-  ClearLedHardware();
+
   return true;
 }
 
 inline void ClearLedHardware() {
-  for (uint16_t i = 0; i < kLedCount; ++i) {
-    g_strip.setPixelColor(i, 0);
-  }
-  g_strip.show();
+
 }
 
 inline void SetPixelColor(uint16_t index, uint8_t r, uint8_t g, uint8_t b,
                           uint8_t w) {
   if (index >= kLedCount) return;
-  const uint8_t rr = MixWhite(r, w);
-  const uint8_t gg = MixWhite(g, w);
-  const uint8_t bb = MixWhite(b, w);
-  g_strip.setPixelColor(index, rr, gg, bb);
+
 }
 
-inline void ShowLedHardware() { g_strip.show(); }
+inline void ShowLedHardware() { }
 
 inline const char* GetHardwareConfigLabel() {
   return "HAL_CONFIG_SINGLE_WS2801";
 }
 
 
-
+/*
 
 
 #elif defined(HAL_CONFIG_DUAL_WS2801)
@@ -235,10 +225,10 @@ inline constexpr uint16_t kStripOneCount = HAL_DUAL_WS2801_COUNT_ONE;
 inline constexpr uint16_t kStripTwoCount = HAL_DUAL_WS2801_COUNT_TWO;
 inline constexpr uint16_t kLedCount = kStripOneCount + kStripTwoCount;
 
-inline Adafruit_WS2801 g_stripOne(kStripOneCount, HAL_DUAL_WS2801_DATA_PIN_ONE,
-                                  HAL_DUAL_WS2801_CLOCK_PIN_ONE);
-inline Adafruit_WS2801 g_stripTwo(kStripTwoCount, HAL_DUAL_WS2801_DATA_PIN_TWO,
-                                  HAL_DUAL_WS2801_CLOCK_PIN_TWO);
+//inline Adafruit_WS2801 g_stripOne(kStripOneCount, HAL_DUAL_WS2801_DATA_PIN_ONE,
+//                                  HAL_DUAL_WS2801_CLOCK_PIN_ONE);
+//inline Adafruit_WS2801 g_stripTwo(kStripTwoCount, HAL_DUAL_WS2801_DATA_PIN_TWO,
+//                                  HAL_DUAL_WS2801_CLOCK_PIN_TWO);
 
 inline bool InitLedHardware() {
   g_stripOne.begin();
@@ -288,7 +278,7 @@ inline const char* GetHardwareConfigLabel() {
   return "HAL_CONFIG_DUAL_WS2801";
 }
 
-
+*/
 
 
 

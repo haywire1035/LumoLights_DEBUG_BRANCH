@@ -64,6 +64,79 @@ struct DEV_Identify : Service::AccessoryInformation {
 ////////////////////////////////////
 struct DEV_Color1_Light : Service::LightBulb {
 
+  Characteristic::On power{0,true};
+  Characteristic::Hue H{0,true};
+  Characteristic::Saturation S{0,true};
+  Characteristic::Brightness V{100,true};
+
+  WS2801_LED* pixel;
+  int nPixels;
+
+  uint32_t timer_RGB = 0;
+
+  WS2801_LED::Color* colors;
+
+DEV_Color1_Light(uint8_t dataPin, uint8_t clockPin, int nPixels) : Service::LightBulb(){
+
+    V.setRange(5,100,1);                      // sets the range of the Brightness to be from a min of 5%, to a max of 100%, in steps of 1%
+    pixel=new WS2801_LED(dataPin,clockPin);          // creates Dot LED on specified pins
+    colors = new WS2801_LED::Color[nPixels];
+
+    //this->nPixels=nPixels;                    // save number of Pixels in this LED Strand
+    update();                                 // manually call update() to set pixel with restored initial values
+    update();                                 // call second update() a second time - DotStar seems to need to be "refreshed" upon start-up
+  }
+
+  boolean update() override {
+
+    int p = power.getNewVal();            // 0 or 1
+    float h = H.getNewVal<float>();       // [0..360]
+    float s = S.getNewVal<float>();       // [0..100]
+    float v = V.getNewVal<float>();       // [0..100]
+
+    WS2801_LED::Color c;
+    c.HSV(h * p, s * p, v * p);           // power=0 → black
+
+    for (int i = 0; i < nPixels; i++) {
+      colors[i] = c;
+    }
+
+    pixel->set(colors, nPixels);
+
+    mirror.onoff     = p;
+    mirror.level     = v;
+    mirror.hue1      = h;
+    mirror.sat1      = s;
+
+    MAIN::MirrorUpdated();
+
+    return true;
+  }
+
+  void loop() override {
+    if (millis() - timer_RGB < 1000)
+      return;
+
+    timer_RGB = millis();
+
+    // Example effect: faint blue pulse (only for demonstration)
+    static uint8_t pulse = 0;
+    pulse = (pulse + 25) % 255;
+
+    for (int i = 0; i < nPixels; i++) {
+      colors[i].RGB(0, 0, pulse);
+    }
+
+    pixel->set(colors, nPixels);
+  }
+};
+
+
+
+
+
+/*
+
   SpanCharacteristic *power;
   SpanCharacteristic *level;
   SpanCharacteristic *hue;
@@ -102,20 +175,8 @@ struct DEV_Color1_Light : Service::LightBulb {
     }
   }
 
-  boolean update() {
 
-    //if (DEBUG_SERIAL) Serial.println("Update on RGB values (Color 1).");
-
-    mirror.onoff     = power->getNewVal();
-    mirror.level     = level->getNewVal();
-    mirror.hue1      = hue->getNewVal();
-    mirror.sat1      = sat->getNewVal();
-
-    MAIN::MirrorUpdated();
-
-    return true;
-  }
-};
+};*/
 
 ////////////////////////////////////
 // Custom Struct for Color2 Light //
@@ -197,7 +258,7 @@ bool InitializeDevice() {
   new Characteristic::Version(SKETCH_VERSION);
 
   // Two LightBulb services on the same accessory for the two colors
-  new DEV_Color1_Light();
+  new DEV_Color1_Light(HAL_SINGLE_WS2801_DATA_PIN, HAL_SINGLE_WS2801_CLOCK_PIN, HAL_SINGLE_WS2801_LED_COUNT);
   new DEV_Color2_Light();
 
   return true;
