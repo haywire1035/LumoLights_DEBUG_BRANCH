@@ -116,14 +116,14 @@ DEV_Color1_Light(uint8_t dataPin, uint8_t clockPin, int count)
   }
 
   void loop() override {
-    if (millis() - timer_RGB < 1000)
+    if (millis() - timer_RGB < 50)
       return;
 
     timer_RGB = millis();
 
     // Example effect: faint blue pulse (only for demonstration)
     static uint8_t pulse = 0;
-    pulse = (pulse + 25) % 255;
+    pulse = (pulse + 1) % 255;
 
     for (int i = 0; i < nPixels; i++) {
       colors[i].RGB(0, 0, pulse);

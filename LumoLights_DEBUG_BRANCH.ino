@@ -116,12 +116,12 @@ void loop() {
 
   homeSpan.poll();
 
-  LED::Update();
+  //LED::Update();
 
-  MAIN::UpdateDeviceBridge();
+  //MAIN::UpdateDeviceBridge();
 
-  SETTINGS::Update();
+  //SETTINGS::Update();
 
-  CONSOLE::Process();
+  //CONSOLE::Process();
 
 }
